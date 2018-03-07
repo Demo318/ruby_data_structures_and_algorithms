@@ -15,8 +15,26 @@ class Node
   end
 end
 
-def build_tree(data)
-  # 
+def build_tree(data, parent_node = nil)
+  # Takes in array of values, recursively creates binary tree.
+  # Returns first node, which anchors to the rest of the tree.
 
+  this_value = data.shift
+  this_node = Node.new(this_value)
+  this_node.parent = parent_node
 
+  return if data.empty?
+
+  if this_value <= data[0]
+    this_node.left_child = build_tree(data, this_node)
+  else
+    this_node.right_child = build_tree(data, this_node)
+  end
+
+  this_node
 end
+
+
+
+tree = build_tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+p tree
