@@ -87,12 +87,40 @@ def find_root_node(node)
   node
 end
 
-def breadth_first_search(binary_tree)
+def breadth_first_search(root_node)
   # Classice breadth-first-search algorithm
 
+  # get values from current_level
+  # discover children of current_level nodes & assign to next_level
+  # append values to array
+  # return array
+
+  current_level_nodes = [root_node]
+
+  all_values = []
+
+  loop do
+    next_level_nodes = []
+
+    puts "Going to process #{current_level_nodes.length} nodes."
+    current_level_nodes.each do |node|
+      all_values.append(node.value)
+      next_level_nodes.append(node.left_child) unless node.left_child.nil?
+      next_level_nodes.append(node.right_child) unless node.right_child.nil?
+    end
+    puts "Just processed #{current_level_nodes.length} nodes."
+    puts "Have #{next_level_nodes.length} up next."
+
+    current_level_nodes = next_level_nodes
+    break if current_level_nodes.empty?
+  end
+
+  all_values
 end
 
 
 tree = build_tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 p tree
+
+p breadth_first_search(tree)
  
