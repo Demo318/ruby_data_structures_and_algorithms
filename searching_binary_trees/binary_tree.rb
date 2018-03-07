@@ -106,12 +106,22 @@ def breadth_first_search(target, root_node)
 end
 
 def find_next_level_nodes(current_level)
+  # Returns array of Node objects that are children of Nodes in current_level
+
   next_level = []
   current_level.each do |node|
     next_level.append(node.left_child) unless node.left_child.nil?
     next_level.append(node.right_child) unless node.right_child.nil?
   end
   next_level
+end
+
+def depth_first_search(target, node)
+  # Looks left, at itself, then right, goes up a level
+  
+  # variables: value, parent, left_child, right_child
+
+
 end
 
 
