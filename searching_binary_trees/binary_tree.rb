@@ -15,7 +15,7 @@ class Node
   end
 
   def to_s
-    value.to_s
+    puts "#{@value} at #{object_id}"
   end
 end
 
@@ -118,12 +118,17 @@ end
 
 def depth_first_search(target, node)
   # Looks left, at itself, then right, goes up a level
-  
+
   # variables: value, parent, left_child, right_child
-
-
 end
 
+def depth_first_search_recursive(target, node)
+  # in-order depth-first-search done recursively.
+
+  depth_first_search_recursive(target, node.left_child) unless node.left_child.nil?
+  return node if node.value == target
+  depth_first_search_recursive(target, node.right_child) unless node.right_child.nil?
+end
 
 tree = build_tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 
@@ -131,4 +136,12 @@ puts breadth_first_search(23, tree)
 puts breadth_first_search(1, tree)
 puts breadth_first_search(6345, tree)
 puts breadth_first_search(66, tree)
+
+puts 'Depth first recursive'
+
+puts depth_first_search_recursive(23, tree)
+puts depth_first_search_recursive(1, tree)
+puts depth_first_search_recursive(6345, tree)
+puts depth_first_search_recursive(66, tree)
+
  
