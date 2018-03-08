@@ -83,7 +83,7 @@ end
 def find_root_node(node)
   # Climbs up tree to find node that has no parent.
 
-  node = node.parent while node.parent.nil? == false
+  node = node.parent until node.parent.nil?
   node
 end
 
@@ -116,11 +116,7 @@ def find_next_level_nodes(current_level)
   next_level
 end
 
-def depth_first_search(target, node)
-  # Looks left, at itself, then right, goes up a level
-
-  # variables: value, parent, left_child, right_child
-end
+# TODO: Write a depth_first_search that isn't recursive.
 
 def depth_first_search_recursive(target, node)
   # in-order depth-first-search done recursively.
@@ -143,5 +139,3 @@ puts depth_first_search_recursive(23, tree)
 puts depth_first_search_recursive(1, tree)
 puts depth_first_search_recursive(6345, tree)
 puts depth_first_search_recursive(66, tree)
-
- 
