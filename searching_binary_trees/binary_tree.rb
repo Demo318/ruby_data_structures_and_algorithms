@@ -29,7 +29,6 @@ def build_tree(data)
   while data.empty? == false
     this_value = data.shift
     add_node(this_value, root_node)
-
   end
 
   root_node
@@ -127,7 +126,6 @@ def depth_first_search_recursive(target, node)
 end
 
 tree = build_tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-
 puts breadth_first_search(23, tree)
 puts breadth_first_search(1, tree)
 puts breadth_first_search(6345, tree)
