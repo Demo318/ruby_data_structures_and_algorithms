@@ -18,6 +18,8 @@ end
 # An instance of Board contains enough BoardSpace objects
 # to create the entire play-surface of the chess board.
 class Board
+  attr_accessor :root_space
+
   def initialize()
     # Generates linked board spaces.
     # Returns space at coords 0, 0
@@ -25,46 +27,53 @@ class Board
     @max_x = 7
     @max_y = 7
     @root_space = BoardSpace.new([0, 0])
+
+  end
+
+  def generate_board
+    # creates blank game board
+
     current_root = @root_space
     prev_root = nil
 
-    until current_root.coordinates[1] == @max_y do
+    loop do
       create_row(current_root)
       link_row(current_root, prev_root) unless prev_root.nil?
-      prev_root = current_root
       current_root.adjacent_spaces['up'] = BoardSpace.new([current_root.coordinates[0], current_root.coordinates[1] + 1])
       current_root = current_root.adjacent_spaces['up']
+      break if current_root.coordinates[1] == @max_y
+      prev_root = current_root
     end
-
-    @root_space
   end
 
   def link_row(top_space, bottom_space)
-    # links relationships vertically between spaces, giving each an 
+    # links relationships vertically between spaces, giving each an
+
     first_space = top_space
 
-    until top_space.nil? do
+    loop do
       top_space.adjacent_spaces['down'] = bottom_space
       bottom_space.adjacent_spaces['up'] = top_space
       top_space = top_space.adjacent_spaces['right']
       bottom_space = bottom_space.adjacent_spaces['right']
+      break if top_space.nil?
     end
 
     first_space
   end
 
   def create_row(space)
-    # Creates a row of of BoardSpace objects, with 'right' and 'left' relations defined
+    # Creates a row of of BoardSpace objects, with 'right' and 'left' relations
 
     this_space = space
-    until this_space.coordinates[0] == @max_x do
+    loop do
       new_space = BoardSpace.new([this_space.coordinates[0] + 1,
                                   this_space.coordinates[1]])
       this_space.adjacent_spaces['right'] = new_space
       new_space.adjacent_spaces['left'] = this_space
       this_space = new_space
+      break if this_space.coordinates[0] == @max_x
     end
-
     space
   end
 end
