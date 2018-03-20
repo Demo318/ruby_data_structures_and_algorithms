@@ -12,13 +12,24 @@ class BoardSpace
     @coordinates = coordinates
     @adjacent_spaces = { 'up' => nil, 'right' => nil, 'down' => nil, 'left' => nil }
   end
+
+  def get_coords(space)
+    return space.coordinates unless space.nil?
+    nil
+  end
+
+  def to_s
+
+    "#{@coordinates} | UP: #{get_coords(@adjacent_spaces['up'])} RIGHT: #{get_coords(@adjacent_spaces['right'])} DOWN: #{get_coords(@adjacent_spaces['down'])} LEFT: #{get_coords(@adjacent_spaces['left'])}"
+
+  end
 end
 
 
 # An instance of Board contains enough BoardSpace objects
 # to create the entire play-surface of the chess board.
 class Board
-  attr_accessor :root_space
+  attr_accessor :root_space, :current_space
 
   def initialize()
     # Generates linked board spaces.
@@ -27,7 +38,29 @@ class Board
     @max_x = 7
     @max_y = 7
     @root_space = BoardSpace.new([0, 0])
+    @player_space = nil
+  end
 
+  def find_space(coords)
+    # Locates space containing player-provided coordinates.
+    # coords = [0,0]
+
+    first_row_space = @root_space
+    this_space = first_row_space
+
+    loop do
+      return this_space if this_space.coordinates == coords
+      break if this_space.coordinates == [@max_x, @max_y]
+
+      if this_space.adjacent_spaces['right'].nil? == false
+        this_space = this_space.adjacent_spaces['right']
+      else
+        this_space = first_row_space.adjacent_spaces['up']
+        first_row_space = this_space
+      end
+
+    end
+    false
   end
 
   def generate_board
@@ -39,11 +72,13 @@ class Board
     loop do
       create_row(current_root)
       link_row(current_root, prev_root) unless prev_root.nil?
-      current_root.adjacent_spaces['up'] = BoardSpace.new([current_root.coordinates[0], current_root.coordinates[1] + 1])
-      current_root = current_root.adjacent_spaces['up']
-      break if current_root.coordinates[1] == @max_y
+      break unless current_root.coordinates[1] < @max_y
+      current_root.adjacent_spaces['up'] = BoardSpace.new([current_root.coordinates[0],
+                                                           current_root.coordinates[1] + 1])
       prev_root = current_root
+      current_root = current_root.adjacent_spaces['up']
     end
+    self
   end
 
   def link_row(top_space, bottom_space)
@@ -81,21 +116,44 @@ end
 # Builds a tree of all possible moves for a given type of piece.
 # Includes restriction on how large the board can be (8x8)
 class BestRoute
+  attr_reader :start_space
+  attr_accessor :board
 
   def initialize()
     # Creates tree of related BoardSpaces.
-    nil
+    # Initialize board.player_space to 0,0
+
+    @board = Board.new
+    @board.generate_board
+
+    pick_start([0, 0])
+
   end
 
   def pick_start(start_coords)
     # User sets where his knight piece goes.
     # Returns true if set
 
-    @start_coord = start_coords
+    @start_space = @board.find_space(start_coords)
+    @start_space.to_s
   end
 
-  def find_route(end_coords)
+  def find_route(this_space, end_coords, spaces = [])
     # Finds route from @start_coords to end_coord
     # Returns human-readable list of moves.
+    spaces << this_space.to_s
+    return spaces if this_space.coordinates == end_coords
+
+
+  end
+
+  def move_up_left(this_space, end_coords, spaces)
+    this_space = this_space.adjacent_spaces['up'].adjacent_spaces['up'].adjacent_spaces['left']
+
   end
 end
+
+this_route = BestRoute.new
+
+puts "Location 2,2 is #{this_route.board.find_space([2, 2])}."
+puts "UpLeft Move #{this_route.board.find_space([2, 2]).adjacent_spaces['up'].adjacent_spaces['up'].adjacent_spaces['left'].to_s}"
