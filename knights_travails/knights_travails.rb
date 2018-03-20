@@ -113,11 +113,55 @@ class Board
   end
 end
 
+# Represents knight piece on chess board.
+class Knight
+  attr_reader :possible_moves, :current_space
+
+  def initialize(starting_space)
+    @current_space = starting_space
+    @possible_moves = get_spaces
+  end
+
+  def new_space(space)
+    @current_space = space
+    @possible_moves = get_spaces
+    @possible_moves
+  end
+
+  def get_spaces
+    moves = []
+    possible_directions = [['up', 'left'],
+                           ['up', 'right'],
+                           ['right', 'up'],
+                           ['right', 'down'],
+                           ['down', 'right'],
+                           ['down', 'left'],
+                           ['left', 'down'],
+                           ['left', 'up']]
+
+    possible_directions.each do |directs|
+      destination_space = move_knight(directs, @current_space)
+      moves << destination_space unless destination_space.nil?
+    end 
+    moves
+  end
+
+  def move_knight(direction, this_space)
+    2.times do
+      return nil if this_space.adjacent_spaces[direction[0]].nil?
+      this_space = this_space.adjacent_spaces[direction[0]]
+    end
+
+    return nil if this_space.adjacent_spaces[direction[1]].nil?
+    this_space.adjacent_spaces[direction[1]]
+  end
+end
+
 # Builds a tree of all possible moves for a given type of piece.
 # Includes restriction on how large the board can be (8x8)
 class BestRoute
   attr_reader :start_space
-  attr_accessor :board
+  attr_accessor :board, :piece
 
   def initialize()
     # Creates tree of related BoardSpaces.
@@ -126,7 +170,7 @@ class BestRoute
     @board = Board.new
     @board.generate_board
 
-    pick_start([0, 0])
+    @piece = Knight.new(@board.find_space([4, 4]))
 
   end
 
@@ -134,26 +178,22 @@ class BestRoute
     # User sets where his knight piece goes.
     # Returns true if set
 
-    @start_space = @board.find_space(start_coords)
-    @start_space.to_s
+    @piece.new_space(@board.find_space(start_coords))
+    @piece
   end
 
-  def find_route(this_space, end_coords, spaces = [])
-    # Finds route from @start_coords to end_coord
-    # Returns human-readable list of moves.
-    spaces << this_space.to_s
-    return spaces if this_space.coordinates == end_coords
-
-
-  end
-
-  def move_up_left(this_space, end_coords, spaces)
-    this_space = this_space.adjacent_spaces['up'].adjacent_spaces['up'].adjacent_spaces['left']
-
+  def find_route(end_coords, piece = @piece, moves_list = [])
+    return nil if moves_list.length > 64
+    moves_list << piece.current_space
+    p moves_list if piece.current_space.coordinates == end_coords
+    return moves_list if piece.current_space.coordinates == end_coords
+    piece.possible_moves.each do |space|
+      find_route(end_coords, Knight.new(space), moves_list)
+    end
   end
 end
 
 this_route = BestRoute.new
-
-puts "Location 2,2 is #{this_route.board.find_space([2, 2])}."
-puts "UpLeft Move #{this_route.board.find_space([2, 2]).adjacent_spaces['up'].adjacent_spaces['up'].adjacent_spaces['left'].to_s}"
+puts "Location 2, 2 is #{this_route.board.find_space([2, 2])}."
+puts "Location 0, 0 is #{this_route.board.find_space([0, 0])}."
+puts this_route.find_route([2, 3])
