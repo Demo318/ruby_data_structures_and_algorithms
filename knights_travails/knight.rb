@@ -2,21 +2,21 @@ require_relative 'moves_tree.rb'
 
 # Represents knight piece on chess board.
 class Knight
-  attr_reader :possible_moves, :current_space
+  attr_accessor :possible_moves, :current_space, :board
 
   def initialize(starting_space, board)
     @current_space = starting_space
     @board = board
-    @possible_moves = get_spaces
+    @possible_moves = get_spaces(@current_space)
   end
 
   def new_space(space)
     @current_space = space
-    @possible_moves = get_spaces
+    @possible_moves = get_spaces(@current_space)
     @possible_moves
   end
 
-  def get_spaces
+  def get_spaces(starting_space)
     moves = []
     possible_directions = [['up', 'left'],
                            ['up', 'right'],
@@ -28,7 +28,7 @@ class Knight
                            ['left', 'up']]
 
     possible_directions.each do |directs|
-      destination_space = move_knight(directs, @current_space)
+      destination_space = move_knight(directs, starting_space)
       moves << destination_space unless destination_space.nil?
     end 
     moves

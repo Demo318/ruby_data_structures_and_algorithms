@@ -1,5 +1,5 @@
 class MoveNode
-  attr_accessor :
+  attr_accessor :parent_space, :space, :child_spaces
 
   def initialize(parent, current)
     @parent_space = parent

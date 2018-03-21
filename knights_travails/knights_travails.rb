@@ -37,7 +37,14 @@ class BestRoute
   end
 end
 
-this_route = BestRoute.new
-puts "Location 2, 2 is #{this_route.board.find_space([2, 2])}."
-puts "Location 0, 0 is #{this_route.board.find_space([0, 0])}."
-puts this_route.board.find_all_spaces
+my_board = Board.new
+my_board.generate_board
+puts "Board Built"
+my_knight = Knight.new(my_board.find_space([4, 4]), my_board)
+puts "You have a knight"
+my_moves_tree = MovesTree.new(my_knight)
+puts "Initialized moves tree"
+my_moves_tree.build_tree
+puts "tree built"
+puts my_moves_tree.root_node
+
