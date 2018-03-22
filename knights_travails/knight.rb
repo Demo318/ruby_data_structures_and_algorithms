@@ -13,7 +13,6 @@ class Knight
   def new_space(space)
     @current_space = space
     @possible_moves = get_spaces(@current_space)
-    @possible_moves
   end
 
   def get_spaces(starting_space)

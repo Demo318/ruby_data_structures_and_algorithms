@@ -8,5 +8,10 @@ class MoveNode
 
   end
 
+  def to_s
+
+    "NODE #{space.coordinates}"
+
+  end
 
 end

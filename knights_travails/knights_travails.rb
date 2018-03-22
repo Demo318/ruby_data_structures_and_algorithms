@@ -17,9 +17,10 @@ my_moves_tree.build_tree
 puts "tree built"
 puts my_moves_tree.root_node
 puts my_moves_tree.change_root([5, 2])
-my_moves_tree.find_dest([3, 1])
+p my_moves_tree.find_dest([3, 1])
+p my_moves_tree.find_dest([7, 7])
 puts my_moves_tree.root_node.space.coordinates
 
 children = []
-my_moves_tree.root_node.child_nodes.each {|node| children << node.space.coordinates }
+my_moves_tree.root_node.child_nodes[0].child_nodes[0].child_nodes[0].child_nodes.each {|node| children << node.space.coordinates }
 p children

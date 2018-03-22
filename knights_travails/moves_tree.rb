@@ -9,7 +9,6 @@ class MovesTree
   def initialize(knight)
     @knight = knight
     @board = knight.board
-    @route = []
   end
 
   def build_tree
@@ -53,24 +52,23 @@ class MovesTree
     @root_node
   end
 
-  def find_dest(coords, node = @root_node, this_path = [])
-    puts "finding dest"
-    p node.space.coordinates
+  def find_dest(coords, node = @root_node)
 
-    this_path << node.space.coordinates
+    queue = [node]
+    route = []
 
-    if this_path[-1] == coords
-      @route = this_path
-      return
-    end
-    
-    unless node.child_nodes.empty?
-      node.child_nodes.each do |this_node|
-        find_dest(coords, this_node, this_path)
-      end
+    loop do
+      node = queue.shift
+      break if node.space.coordinates == coords
+      node.child_nodes.each { |n| queue << n }
     end
 
-    @route
+    loop do
+      route << node.space.coordinates
+      break if node.parent_node.nil?
+      node = node.parent_node
+    end
+    route.reverse
   end
 
 end
