@@ -41,7 +41,6 @@ class MovesTree
 
   def get_all_spaces
     @all_possible_spaces = @board.find_all_spaces
-    puts "all spaces found"
   end
 
   def change_root(coords)
@@ -71,4 +70,10 @@ class MovesTree
     route.reverse
   end
 
+  def provide_route(coords)
+    route = find_dest(coords)
+
+    puts "You moved from #{route[0]} to #{route[-1]} in #{route.length - 1} move(s):"
+    route.each { |s| puts "#{s[0]}, #{s[1]}" }
+  end
 end
