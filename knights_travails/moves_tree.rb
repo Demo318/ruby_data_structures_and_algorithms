@@ -1,26 +1,24 @@
 require_relative 'move_node.rb'
+require_relative 'knight.rb'
+
 
 class MovesTree
 
-  attr_accessor :root_node
+  attr_accessor :root_node, :route
 
   def initialize(knight)
     @knight = knight
     @board = knight.board
+    @route = []
   end
 
   def build_tree
-
     get_all_spaces
 
     # Identify the Knight's current position as the root node of the tree.
     @root_node = MoveNode.new(nil, @knight.current_space)
     remove_possible_space(@root_node)
-
     add_all_child_spaces(@root_node, @knight)
-
-
-
   end
 
   def add_all_child_spaces(node, knight)
@@ -45,6 +43,34 @@ class MovesTree
   def get_all_spaces
     @all_possible_spaces = @board.find_all_spaces
     puts "all spaces found"
+  end
+
+  def change_root(coords)
+    # Rebuilt MovesTree based on new Coordinates
+
+    @knight.new_space(@knight.board.find_space(coords))
+    build_tree
+    @root_node
+  end
+
+  def find_dest(coords, node = @root_node, this_path = [])
+    puts "finding dest"
+    p node.space.coordinates
+
+    this_path << node.space.coordinates
+
+    if this_path[-1] == coords
+      @route = this_path
+      return
+    end
+    
+    unless node.child_nodes.empty?
+      node.child_nodes.each do |this_node|
+        find_dest(coords, this_node, this_path)
+      end
+    end
+
+    @route
   end
 
 end
