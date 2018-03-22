@@ -3,7 +3,7 @@ require_relative 'move_node.rb'
 class MovesTree
 
   attr_accessor :root_node
-  
+
   def initialize(knight)
     @knight = knight
     @board = knight.board
@@ -30,7 +30,7 @@ class MovesTree
     @all_possible_spaces.delete_if { |spc| next_moves.include?(spc) }
     next_moves.each do |nxtmv|
       new_node = MoveNode.new(node, nxtmv)
-      node.child_spaces << new_node
+      node.child_nodes << new_node
       add_all_child_spaces(new_node, knight)
     end
   end
